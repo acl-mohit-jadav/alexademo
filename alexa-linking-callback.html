@@ -1,28 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Alexa Account Linking Complete</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
-    body { font-family: sans-serif; background: #f4f6fb; color: #222; text-align: center; margin: 0; padding: 0;}
-    .container { margin: 10vh auto; max-width: 400px; background: #fff; padding: 2em; border-radius: 10px; box-shadow: 0 2px 16px rgba(0,0,0,0.06);}
-    .btn { display: inline-block; padding: 0.8em 2em; margin: 1em 0 0 0; background: #3ca5f6; color: #fff; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer; text-decoration: none;}
-    .btn:active { background: #298edb; }
-    .small { font-size: 0.95em; color: #888;}
+    body {
+      font-family: sans-serif;
+      background: #f4f6fb;
+      color: #222;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      margin: 10vh auto;
+      max-width: 400px;
+      background: #fff;
+      padding: 2em;
+      border-radius: 10px;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.8em 2em;
+      margin-top: 1.5em;
+      background: #3ca5f6;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1em;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .btn:active {
+      background: #298edb;
+    }
+    .small {
+      font-size: 0.95em;
+      color: #888;
+    }
   </style>
   <script>
-    // Helper: get all query params and re-encode them for the deep link
     function getQueryString() {
-      return window.location.search ? window.location.search : "";
+      return window.location.search || "";
     }
+
     function goToApp() {
-      // Deep link with query params
-      window.location.href = "airdoctor://alexa/callback" + getQueryString();
+      const deepLink = "airdoctor://alexa/callback" + getQueryString();
+      console.log("🔗 Redirecting to:", deepLink);
+      window.location.href = deepLink;
     }
-    // Try auto-redirect after a short delay (2s)
-    window.onload = function() {
-      setTimeout(goToApp, 2000);
+
+    window.onload = function () {
+      console.log("✅ Page loaded. Preparing to redirect...");
+      const isAndroid = /android/i.test(navigator.userAgent);
+      if (isAndroid) {
+        console.log("📱 Detected Android. Will redirect in 2 seconds...");
+        setTimeout(goToApp, 2000);
+      } else {
+        console.log("🛑 Not Android. Auto-redirect disabled.");
+      }
     };
   </script>
 </head>
@@ -30,8 +68,8 @@
   <div class="container">
     <h2>Alexa Account Linking Complete</h2>
     <p>Your account has been successfully linked with Alexa.</p>
-    <a class="btn" href="#" onclick="goToApp();return false;">Return to AirDoctor App</a>
-    <p class="small">If you are not redirected automatically,<br>tap the button above.</p>
+    <a class="btn" href="#" onclick="goToApp(); return false;">Return to AirDoctor App</a>
+    <p class="small">If you are not redirected automatically,<br />tap the button above.</p>
   </div>
 </body>
 </html>
