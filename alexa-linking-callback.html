@@ -46,20 +46,36 @@
       return window.location.search || "";
     }
 
+    function goToAmazonOAuth() {
+      const params = new URLSearchParams(window.location.search);
+      const redirectUri = encodeURIComponent("https://acl-mohit-jadav.github.io/alexademo/alexa-linking-callback.html");
+      const state = params.get("state") || "state1";
+      const amazonAuthUrl = `https://www.amazon.com/ap/oa?client_id=amzn1.application-oa2-client.3ef88a89b48f4f02ac5309f8a376489d&scope=alexa::skills:account_linking&response_type=code&redirect_uri=${redirectUri}&state=${state}`;
+
+      console.log("🔁 Redirecting to Amazon OAuth page:", amazonAuthUrl);
+      window.location.href = amazonAuthUrl;
+    }
+
     function goToApp() {
       const deepLink = "airdoctor://alexa/callback" + getQueryString();
-      console.log("🔗 Redirecting to:", deepLink);
+      console.log("🔗 Redirecting to app:", deepLink);
       window.location.href = deepLink;
     }
 
     window.onload = function () {
-      console.log("✅ Page loaded. Preparing to redirect...");
+      console.log("✅ Page loaded. Starting redirect flow...");
+
       const isAndroid = /android/i.test(navigator.userAgent);
       if (isAndroid) {
-        console.log("📱 Detected Android. Will redirect in 2 seconds...");
-        setTimeout(goToApp, 2000);
+        console.log("📱 Android detected. Redirecting to Amazon first...");
+        setTimeout(() => {
+          goToAmazonOAuth();
+
+          // Then redirect back to app after 5s (you can tweak timing)
+          setTimeout(goToApp, 5000);
+        }, 1500);
       } else {
-        console.log("🛑 Not Android. Auto-redirect disabled.");
+        console.log("🛑 Not Android. Manual redirect only.");
       }
     };
   </script>
