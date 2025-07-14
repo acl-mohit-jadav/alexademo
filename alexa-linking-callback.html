@@ -42,38 +42,26 @@
     }
   </style>
   <script>
-    // Define your Alexa Skill ID
-    const ALEXA_SKILL_ID = "amzn1.ask.skill.0c4124ac-d77a-414b-b954-66d78543026e";
 
-    // Function to redirect to the Alexa app
-    function goToAlexaApp() {
-      const alexaDeepLink = `alexa://skills/${ALEXA_SKILL_ID}/link-account?fragment=account-linking`;
-      console.log("🔗 Attempting to redirect to Alexa app:", alexaDeepLink);
-      window.location.href = alexaDeepLink;
+    function getQueryString() {
+      return window.location.search || "";
     }
 
-    // Function (kept for reference, but likely not needed on this "complete" page)
-    // function goToAmazonOAuth() {
-    //   const params = new URLSearchParams(window.location.search);
-    //   const redirectUri = encodeURIComponent("https://acl-mohit-jadav.github.io/alexademo/alexa-linking-callback.html");
-    //   const state = params.get("state") || "state1";
-    //   const amazonAuthUrl = `https://www.amazon.com/ap/oa?client_id=amzn1.application-oa2-client.3ef88a89b48f4f02ac5309f8a376489d&scope=alexa::skills:account_linking&response_type=code&redirect_uri=${redirectUri}&state=${state}`;
-
-    //   console.log("🔁 Redirecting to Amazon OAuth page:", amazonAuthUrl);
-    //   window.location.href = amazonAuthUrl;
-    // }
+    function goToApp() {
+      const deepLink = "airdoctor://alexa/callback" + getQueryString();
+      console.log("🔗 Redirecting to:", deepLink);
+      window.location.href = deepLink;
+    }
 
     window.onload = function () {
-      console.log("✅ Page loaded. Attempting to redirect to Alexa app...");
-
-      // Automatically try to open the Alexa app after a short delay
-      // A small delay can help ensure the browser has fully rendered before redirecting.
-      setTimeout(() => {
-        goToAlexaApp();
-      }, 500); // 0.5 second delay
-
-      // You might want to add a fallback or instructions if the deep link fails to open.
-      // For instance, a message telling the user to manually open the Alexa app.
+      console.log("✅ Page loaded. Preparing to redirect...");
+      const isAndroid = /android/i.test(navigator.userAgent);
+      if (isAndroid) {
+        console.log("📱 Detected Android. Will redirect in 2 seconds...");
+        setTimeout(goToApp, 2000);
+      } else {
+        console.log("🛑 Not Android. Auto-redirect disabled.");
+      }
     };
   </script>
 </head>
@@ -81,7 +69,7 @@
   <div class="container">
     <h2>Alexa Account Linking Complete</h2>
     <p>Your account has been successfully linked with Alexa.</p>
-    <a class="btn" href="#" onclick="goToAlexaApp(); return false;">Return to Alexa App</a>
+    <a class="btn" href="#" onclick="goToApp(); return false;">Return to AirDoctor App</a>
     <p class="small">If you are not redirected automatically,<br />tap the button above.</p>
   </div>
 </body>
