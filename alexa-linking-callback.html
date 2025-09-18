@@ -2,58 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Alexa Account Linking Complete</title>
+    <title>Redirecting to App...</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f4f6fb; color: #222; text-align: center; margin: 0; padding: 0;}
-        .container { margin: 10vh auto; max-width: 400px; background: #fff; padding: 2em; border-radius: 10px; box-shadow: 0 2px 16px rgba(0,0,0,0.06);}
-        .btn { display: inline-block; padding: 0.8em 2em; margin: 1em 0 0 0; background: #3ca5f6; color: #fff; border: none; border-radius: 6px; font-size: 1.1em; cursor: pointer; text-decoration: none; transition: background 0.3s ease;}
-        .btn:hover { background: #298edb; }
-        .btn:active { background: #298edb; }
-        .small { font-size: 0.95em; color: #888;}
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #e3f0ff 0%, #f4f6fb 100%);
+            color: #1a2233;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            margin: 10vh auto;
+            max-width: 420px;
+            background: #fff;
+            padding: 2.5em 2em 2em 2em;
+            border-radius: 16px;
+            box-shadow: 0 4px 32px rgba(60,165,246,0.10), 0 1.5px 6px rgba(60,165,246,0.08);
+        }
+        .icon {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 1.2em;
+        }
+        h2 {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+            color: #3ca5f6;
+        }
+        p {
+            font-size: 1.15em;
+            margin-bottom: 1.5em;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.9em 2.2em;
+            margin: 1em 0 0 0;
+            background: linear-gradient(90deg, #3ca5f6 0%, #298edb 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.15em;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(60,165,246,0.08);
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn:hover, .btn:focus {
+            background: linear-gradient(90deg, #298edb 0%, #3ca5f6 100%);
+            box-shadow: 0 4px 16px rgba(60,165,246,0.13);
+        }
+        .small {
+            font-size: 0.98em;
+            color: #888;
+            margin-top: 1.5em;
+        }
+        @media (max-width: 500px) {
+            .container { padding: 1.2em 0.5em; }
+            h2 { font-size: 1.4em; }
+        }
     </style>
+</head>
+<body>
+    <div class="container" id="main-content" style="display:none;">
+        <img class="icon" src="https://www.airdoctor.com/favicon.ico" alt="App Logo" />
+        <h2>Continue in the AirDoctor App</h2>
+        <p>To complete your Alexa connection, please continue in the AirDoctor app.<br>You will be redirected automatically.</p>
+        <a class="btn" href="#" onclick="goToApp(); return false;">Open AirDoctor App</a>
+        <div class="small">If you are not redirected automatically,<br>tap the button above.<br><br>Need help? <a href="mailto:support@airdoctor.com" style="color:#3ca5f6;text-decoration:underline;">Contact Support</a></div>
+    </div>
     <script>
-        // Use a universal/app link domain. This must be a domain you control and have configured
-        // for Universal Links (for iOS) and App Links (for Android).
-        const BASE_URL = "https://www.airdoctor.com/alexa/callback";
-
-        // Helper function to get all query parameters from the URL
         function getQueryString() {
             return window.location.search ? window.location.search : "";
         }
-
-        // Detects if the device is iOS or Android
-        function getMobilePlatform() {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-                return 'ios';
-            }
-            if (/android/i.test(userAgent)) {
-                return 'android';
-            }
-            return 'other';
-        }
-
-        // Main function to handle the redirection
         function goToApp() {
-            const deepLink = "airdoctor://alexa/callback" + getQueryString();
-            console.log("🔗 Redirecting to:", deepLink);
-            window.location.href = deepLink;
+            window.location.replace("airdoctor://alexa/callback" + getQueryString());
         }
-
-        // Try auto-redirect after a short delay (2 seconds)
-        window.onload = function() {
-            setTimeout(goToApp, 2000);
-        };
+        // Try to redirect as soon as possible
+        goToApp();
+        // Fallback: if not redirected in 100ms, show the page
+        setTimeout(function() {
+            document.getElementById('main-content').style.display = 'block';
+        }, 100);
     </script>
-</head>
-<body>
-    <div class="container">
-        <h2>Alexa Account Linking Complete</h2>
-        <p>Your account has been successfully linked with Alexa.</p>
-        <!-- The button's href is now a universal link, which is the best practice -->
-        <a class="btn" href="https://www.airdoctor.com/alexa/callback" onclick="goToApp(); return false;">Return to AirDoctor App</a>
-        <p class="small">If you are not redirected automatically,<br>tap the button above.</p>
-    </div>
 </body>
 </html>
